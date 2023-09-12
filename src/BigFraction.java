@@ -61,18 +61,22 @@ public class BigFraction {
    * @param str A string of the form a/b, where a and b are integers
    */
   public BigFraction(String str) {
-    //Scanner scan = new Scanner(System.in);
-    //this.num = BigInteger.valueOf(2);
-    //this.denom = BigInteger.valueOf(7);
 
-    int indexOfSlash = str.indexOf("/");
-    String numStr = str.substring(0, indexOfSlash);
-    String denomStr = str.substring(indexOfSlash+1, str.length());
+    // if this is a whole number, make the numerator and denominator proportional
+    if(str.length() == 1){
+      this.denom = BigInteger.valueOf(Integer.parseInt(str));
+      this.num = this.denom.multiply(this.denom);
+    }
+    else{
 
-    this.num = BigInteger.valueOf(Integer.parseInt(numStr));
-    this.denom = BigInteger.valueOf(Integer.parseInt(denomStr));
-    //this.num = parseInt(numStr);
+      // separate numerator from denominator and parse ints from each substring
+      int indexOfSlash = str.indexOf("/");
+      String numStr = str.substring(0, indexOfSlash);
+      String denomStr = str.substring(indexOfSlash+1, str.length());
 
+      this.num = BigInteger.valueOf(Integer.parseInt(numStr));
+      this.denom = BigInteger.valueOf(Integer.parseInt(denomStr));
+    }
   } // BigFraction
 
   // +---------+------------------------------------------------------
@@ -106,7 +110,7 @@ public class BigFraction {
     resultNumerator = (this.num.multiply(addMe.denom)).add(addMe.num.multiply(this.denom));
 
     // Return the computed value
-    return new BigFraction(resultNumerator, resultDenominator);
+    return new BigFraction(resultNumerator, resultDenominator).simplify();
 
   }// add(BigFraction)
 
@@ -120,12 +124,14 @@ public class BigFraction {
     BigInteger resultNumerator;
     BigInteger resultDenominator;
 
+    // subtracting is the same as adding the negative
+    // design choice: numerators can be negative, but denominators are always positive
     BigInteger negNum = subtractMe.num.multiply(BigInteger.valueOf(-1/1));
 
     resultDenominator = this.denom.multiply(subtractMe.denom);
     resultNumerator = (this.num.multiply(subtractMe.denom)).add(negNum.multiply(this.denom));
 
-    return new BigFraction(resultNumerator, resultDenominator);
+    return new BigFraction(resultNumerator, resultDenominator).simplify();
 
   } // subtract (BigFraction)
 
@@ -142,7 +148,7 @@ public class BigFraction {
     resultNumerator = this.num.multiply(multiplyMe.num);
     resultDenominator = this.denom.multiply(multiplyMe.denom);
 
-    return new BigFraction (resultNumerator, resultDenominator);
+    return new BigFraction (resultNumerator, resultDenominator).simplify();
 
   } // multiply (BigFraction)
 
@@ -159,16 +165,17 @@ public class BigFraction {
     resultNumerator = this.num.multiply(divideMe.denom);
     resultDenominator = this.denom.multiply(divideMe.num);
 
-    return new BigFraction(resultNumerator, resultDenominator);
+    return new BigFraction(resultNumerator, resultDenominator).simplify();
 
   } // divide (BigFraction)
 
   /**
-   * Simplifies this fraction to the greatest extent
+   * Simplifies this fraction to its simplest form
    *
    */
   public BigFraction simplify() {
 
+    // if the numerator is 0, it simplifies to 0
     if(this.num.equals(BigInteger.ZERO) ){
       return new BigFraction("0/0");
     }
@@ -176,8 +183,8 @@ public class BigFraction {
     BigInteger resultNumerator;
     BigInteger resultDenominator;
 
+    // find the GCD of the numerator and denominator and divide both by it
     BigInteger gcd = this.num.gcd(this.denom);
-
     resultNumerator = this.num.divide(gcd);
     resultDenominator = this.denom.divide(gcd);
 
@@ -193,7 +200,6 @@ public class BigFraction {
   public BigFraction fractional(){
     return new BigFraction(this.num.mod(this.denom), this.denom);
   } // fractional()
-
 
   /**
    * Get the denominator of this fraction.
