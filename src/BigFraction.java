@@ -1,11 +1,11 @@
 import java.math.BigInteger;
 /**
- * A simple implementation of BigFractions.
+ * An implementation of BigFractions.
  * 
  * @author Samuel A. Rebelsky
  * @author Jayson Kunkel
  *         Adapted from the Class 6 lab - collaboration between myself and Chloe Kelly
- * @version 1.2 of August 2023
+ * 
  */
 public class BigFraction {
   // +------------------+---------------------------------------------

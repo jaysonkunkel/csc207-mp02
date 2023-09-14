@@ -12,20 +12,28 @@ public class InteractiveCalculator {
 
     PrintWriter pen = new PrintWriter(System.out, true);
     Scanner scan = new Scanner(System.in);
+
     BFCalculator bf = new BFCalculator();
 
-      while(true) {
-        String expr = scan.nextLine();
-        if(expr.equals("QUIT")){
-          break;
-        }
-        if(expr.contains("STORE")){
-          bf.store(expr.charAt(expr.length()-1));
-        }
-        else {
-          pen.println(bf.evaluate(expr));
+    // repeatedly scan expressions from user input
+    while(true) {
+      String expr = scan.nextLine();
+
+      // exit if user is done entering expressions
+      if(expr.equals("QUIT")){
+        break;
       }
-    }
+      // store the last computed value in the given register
+      if(expr.contains("STORE")){
+        bf.store(expr.charAt(expr.length()-1));
+      }
+      // evaluate the given expression and print the result
+      else {
+        pen.println(bf.evaluate(expr));
+      } // if ... else
+    } // while
+
+    // clean up
     pen.close();
     scan.close();
 

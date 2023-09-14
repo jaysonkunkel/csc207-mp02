@@ -29,7 +29,9 @@ public class BFCalculator {
     // separate the expressions into a character array
     String[] values = exp.split(" ");
 
-    // total starts with first fraction
+    // the total value starts with the first expression
+    // if the first expression is a letter, set the total to the value stored in the register
+    // otherwise, set the total to the first expression
     char[] expChar = exp.toCharArray();
     BigFraction total;
     if(Character.isLetter(expChar[0])){
@@ -37,16 +39,16 @@ public class BFCalculator {
     }
     else {
       total = new BigFraction(values[0]);
-    }
+    } // if ... else
 
     // when we reach a mathematical operator, perform the corresponding operation on the next fraction
     for(int i = 1; i < values.length; i++){
       if(i % 2 == 1){
         total = performOperation(total, values[i], values[i+1]);
-       // pen.println("Total: " + total);
       } // for
     }
 
+    // set the last computed value to the total value of the expressions
     this.lastComputed = total;
     return total;
   } // evaluate (String)
@@ -61,7 +63,7 @@ public class BFCalculator {
     //set the register of the last computed value to the given register
     this.regFrac = lastComputed;
     this.regFrac.register = _register;
-    // pen.println(lastComputed.register);
+
   } // store (char)
 
  /**
@@ -74,9 +76,10 @@ public class BFCalculator {
   */
   public BigFraction performOperation (BigFraction total, String operation, String frac) {
 
+    // if the given expression is a character, use the value stored in the register
+    // otherwise use the given value
     char[] fracChar = frac.toCharArray();
     BigFraction f1;
-
     if(Character.isLetter(fracChar[0])){
       f1 = this.regFrac;
     }

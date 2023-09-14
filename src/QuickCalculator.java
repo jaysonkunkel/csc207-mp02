@@ -11,36 +11,23 @@ public class QuickCalculator {
 
     PrintWriter pen = new PrintWriter(System.out, true);
 
-    // BigFraction f1 = new BigFraction(3, 10);
-    // BigFraction f2 = new BigFraction(3, 10);
-
-    // pen.println("First fraction: " + f1);
-    // pen.println("Second fraction: " + f2);
-    // pen.println("Sum: " + (f1.add(f2)));
-    // pen.println("Difference: " + (f1.subtract(f2)));
-    // pen.println("Product: " + (f1.multiply(f2)));
-    // pen.println("Dividend: " + f1.divide(f2));
-
-    // pen.println(f1.add(f2).simplify());
-    // pen.println(f1.subtract(f2).simplify());
-    // pen.println(f1.multiply(f2).simplify());
-    // pen.println(f1.divide(f2).simplify());
-
     BFCalculator bf = new BFCalculator();
 
+    // for each expression on the command line
     for(int i = 0; i < args.length; i++){
 
+      // store the last computed value in given register
       if(args[i].contains("STORE")){
         bf.store(args[i].charAt(args[i].length()-1));
       }
+      // print the given expression and print its computed value
       else {
         pen.println(args[i] + " = " + bf.evaluate(args[i]));
-      }
-      //pen.println(bf.lastComputed);
-    }
+      } // if ... else
+    } // for
 
+    // clean up
     pen.close();
-  
 
   } // main (String[])
 
