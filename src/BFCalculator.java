@@ -1,11 +1,22 @@
 import java.io.PrintWriter;
 
-
+/**
+ * Contains methods for evaluating expressions and storing values in registers
+ * 
+ * @author Jayson Kunkel
+ */
 public class BFCalculator {
   
   PrintWriter pen = new PrintWriter(System.out, true);
 
+  /** the last computed value */
   BigFraction lastComputed;
+
+  /** the last stored fraction */
+  BigFraction regFrac;
+
+  /** an array of BigFractions stored in registers */
+  // BigFraction[] storedFracs;
 
   /**
    * Evaluates a string of expressions of any length
@@ -19,7 +30,14 @@ public class BFCalculator {
     String[] values = exp.split(" ");
 
     // total starts with first fraction
-    BigFraction total = new BigFraction(values[0]);
+    char[] expChar = exp.toCharArray();
+    BigFraction total;
+    if(Character.isLetter(expChar[0])){
+      total = this.regFrac;
+    }
+    else {
+      total = new BigFraction(values[0]);
+    }
 
     // when we reach a mathematical operator, perform the corresponding operation on the next fraction
     for(int i = 1; i < values.length; i++){
@@ -34,11 +52,16 @@ public class BFCalculator {
   } // evaluate (String)
 
   /**
+   * Stores the last value computed in the named register
    * 
-   * @param register
+   * @param register A character
    */
-  public void store (char register) { 
-    // TODO
+  public void store (char _register) { 
+
+    //set the register of the last computed value to the given register
+    this.regFrac = lastComputed;
+    this.regFrac.register = _register;
+    // pen.println(lastComputed.register);
   } // store (char)
 
  /**
@@ -51,7 +74,15 @@ public class BFCalculator {
   */
   public BigFraction performOperation (BigFraction total, String operation, String frac) {
 
-    BigFraction f1 = new BigFraction(frac);
+    char[] fracChar = frac.toCharArray();
+    BigFraction f1;
+
+    if(Character.isLetter(fracChar[0])){
+      f1 = this.regFrac;
+    }
+    else{
+      f1 = new BigFraction(frac);
+    }
 
     // decide which operation to perform based on given operation
     if(operation.equals("+")){

@@ -1,6 +1,6 @@
 import java.math.BigInteger;
 /**
- * A simple implementation of Fractions.
+ * A simple implementation of BigFractions.
  * 
  * @author Samuel A. Rebelsky
  * @author Jayson Kunkel
@@ -30,6 +30,9 @@ public class BigFraction {
   /** The denominator of the fraction. Must be non-negative. */
   BigInteger denom;
 
+  /** The register associated with the fraction. */
+  char register;
+
   // +--------------+-------------------------------------------------
   // | Constructors |
   // +--------------+
@@ -56,6 +59,17 @@ public class BigFraction {
     this.denom = BigInteger.valueOf(denom);
   } // BigFraction(int, int)
 
+  /** Build a new fraction from a given fraction, but associate it with a character
+   * 
+   * @param frac a BigFraction
+   * @param register a single character
+   */
+  public BigFraction(BigFraction frac, char register){
+    this.num = frac.num;
+    this.denom = frac.denom;
+    this.register = register;
+  } // BigFraction (BigFraction, char)
+
   /**
    * Build a new fraction by parsing a string.
    * @param str A string of the form a/b, where a and b are integers
@@ -63,7 +77,7 @@ public class BigFraction {
   public BigFraction(String str) {
 
     // if this is a whole number, make the numerator and denominator proportional
-    if(str.length() == 1){
+    if(str.length()==1){
       this.denom = BigInteger.valueOf(Integer.parseInt(str));
       this.num = this.denom.multiply(this.denom);
     }
