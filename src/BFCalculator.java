@@ -10,13 +10,16 @@ public class BFCalculator {
   PrintWriter pen = new PrintWriter(System.out, true);
 
   /** the last computed value */
-  BigFraction lastComputed;
+  BigFraction lastComputed = new BigFraction(0, 1);
 
   /** the last stored fraction */
   BigFraction regFrac;
 
-  /** an array of BigFractions stored in registers */
-  // BigFraction[] storedFracs;
+  /** an array of BigFractions stored in registers a-z */
+  BigFraction[] storedFracs = new BigFraction[26];
+
+  /** the key which we use to re-base character values to 0 */
+  final static int key = 97;
 
   /**
    * Evaluates a string of expressions of any length
@@ -34,8 +37,10 @@ public class BFCalculator {
     // otherwise, set the total to the first expression
     char[] expChar = exp.toCharArray();
     BigFraction total;
+
+    // assume that a value exists with the register
     if(Character.isLetter(expChar[0])){
-      total = this.regFrac;
+        total = this.storedFracs[expChar[0] - key];
     }
     else {
       total = new BigFraction(values[0]);
@@ -56,18 +61,23 @@ public class BFCalculator {
   /**
    * Stores the last value computed in the named register
    * 
+   * @pre Assume that a value associated with _register exists
+   * 
    * @param register A character
    */
   public void store (char _register) { 
 
     //set the register of the last computed value to the given register
-    this.regFrac = lastComputed;
-    this.regFrac.register = _register;
+    int val = _register - key;
+    storedFracs[val] = lastComputed;
+    storedFracs[val].register = _register;
 
   } // store (char)
 
  /**
   * Performs either addition, subtraction, multiplication, or division on two fractions total and frac 
+  *
+  * @pre if frac is a letter, assume a value associated with that letter exists
   *
   * @param total The current total value of expressions
   * @param operation One of "+", "-", "*", "/"
@@ -80,12 +90,14 @@ public class BFCalculator {
     // otherwise use the given value
     char[] fracChar = frac.toCharArray();
     BigFraction f1;
+
+    // assume that the register exists
     if(Character.isLetter(fracChar[0])){
-      f1 = this.regFrac;
+        f1 = this.storedFracs[fracChar[0] - key];
     }
     else{
       f1 = new BigFraction(frac);
-    }
+    } // if ... else
 
     // decide which operation to perform based on given operation
     if(operation.equals("+")){
