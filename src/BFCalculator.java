@@ -27,7 +27,7 @@ public class BFCalculator {
    * @param exp A string with fractions and mathelatical operators, separated with a single space
    * @return The result of evaluating all expressions in the string
    */
-  public BigFraction evaluate (String exp) {
+  public BigFraction evaluate (String exp) throws Exception{
     
     // separate the expressions into a character array
     String[] values = exp.split(" ");
@@ -36,22 +36,44 @@ public class BFCalculator {
     // if the first expression is a letter, set the total to the value stored in the register
     // otherwise, set the total to the first expression
     char[] expChar = exp.toCharArray();
+
     BigFraction total;
 
     // assume that a value exists with the register
+    // throws an exception if the expression starts with an operation
     if(Character.isLetter(expChar[0])){
-        total = this.storedFracs[expChar[0] - key];
+      total = this.storedFracs[expChar[0] - key];
     }
-    else {
+    else if(Character.isDigit(expChar[0])){
       total = new BigFraction(values[0]);
+    }
+    else{
+      throw new Exception("Error: expression must start with a value");
     } // if ... else
+
+    // check if there are two values or operations in a row
+    for(int i = 0; i < values.length - 1; i++){
+      char[] c1 = values[i].toCharArray();
+      char[] c2 = values[i+1].toCharArray();
+
+      // if there are two of the same thing in a row, throw an exception
+      if((Character.isLetterOrDigit(c1[0]) && Character.isLetterOrDigit(c2[0])) || 
+        (!Character.isLetterOrDigit(c1[0]) && !Character.isLetterOrDigit(c2[0]))){
+          //System.err.println("should throw exception here");
+          throw new Exception("Error: cannot have two values or operations in a row");
+      } // if
+
+    } // for
+
 
     // when we reach a mathematical operator, perform the corresponding operation on the next fraction
     for(int i = 1; i < values.length; i++){
+
       if(i % 2 == 1){
+        //System.err.println("Should not reach here");
         total = performOperation(total, values[i], values[i+1]);
       } // for
-    }
+    } // for
 
     // set the last computed value to the total value of the expressions
     this.lastComputed = total;
