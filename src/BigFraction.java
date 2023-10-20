@@ -243,6 +243,11 @@ public class BigFraction {
       return "1";
     } // if it's one
 
+    // Special case: it's of the form n/1 (n)
+    if(this.denom.equals(BigInteger.ONE)){
+      return this.num.toString();
+    }
+
     // Lump together the string represention of the numerator,
     // a slash, and the string representation of the denominator
     // return this.num.toString().concat("/").concat(this.denom.toString());
